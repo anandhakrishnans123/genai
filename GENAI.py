@@ -35,16 +35,20 @@ if api_key:
                 csv_result = response.text
 
                 # Log the CSV output for debugging
-                st.text(csv_result)  # Use st.text for raw text display
+                st.text_area("Extracted CSV Output", csv_result, height=300)  # Use text area for better visibility
 
                 # Use StringIO to simulate a file-like object for pandas
                 data_io = StringIO(csv_result)
+
+                # Initialize df to None
+                df = None
 
                 # Read the data into a DataFrame
                 try:
                     df = pd.read_csv(data_io)
                 except pd.errors.ParserError as parse_error:
                     st.error(f"CSV Parsing Error: {parse_error}")
+                    return  # Exit the function if parsing fails
 
                 # Save the DataFrame to a CSV file
                 csv_file_path = 'csv_output.csv'
