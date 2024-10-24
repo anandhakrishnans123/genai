@@ -1,7 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
-from io import StringIO, BytesIO
 from PIL import Image
 
 st.title("Image to CSV Converter")
@@ -21,16 +20,12 @@ if api_key:
         img = Image.open(uploaded_file)
         st.image(img, caption='Uploaded Image', use_column_width=True)
 
-        # Save the image to an in-memory file
-        img_bytes = BytesIO()
-        img.save(img_bytes, format=img.format)
-        img_bytes.seek(0)  # Reset pointer to the start of the stream
-
         # Generate CSV from image
         if st.button("Convert Image to CSV"):
             # Assuming the model takes image input directly
             try:
-                response = model.generate_content(img_bytes)  # Replace with actual image-to-text API call if available
+                # Pass the image (PIL Image object) to the model directly
+                response = model.generate_content(img)  # Replace with actual image-to-text API call if available
                 csv_result = response.text
 
                 # Use StringIO to simulate a file-like object for pandas
