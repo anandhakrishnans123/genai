@@ -1,13 +1,13 @@
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
-from io import StringIO  # Import StringIO
+from io import StringIO
 from PIL import Image
 
 st.title("Image to CSV Converter")
 
 # Input for API key
-api_key ="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
+api_key = "AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
 
 if api_key:
     # Configure the Gemini Pro API
@@ -25,17 +25,26 @@ if api_key:
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract data from the uploaded image, ensuring that every cell value is accurately recognized and captured. Convert the extracted data into CSV format, maintaining the original structure and layout of the data as presented in the image. Include headers and ensure that any special characters or formatting are preserved in the CSV output."
-                
+                prompt = ("Extract data from the uploaded image, ensuring that every cell value is "
+                           "accurately recognized and captured. Convert the extracted data into CSV format, "
+                           "maintaining the original structure and layout of the data as presented in the image. "
+                           "Include headers and ensure that any special characters or formatting are preserved in the CSV output.")
+
                 # Pass the image and prompt to the model
-                response = model.generate_content([prompt, img])  # Assuming this format works with your API
+                response = model.generate_content([prompt, img])
                 csv_result = response.text
+
+                # Log the CSV output for debugging
+                st.text(csv_result)  # Use st.text for raw text display
 
                 # Use StringIO to simulate a file-like object for pandas
                 data_io = StringIO(csv_result)
 
                 # Read the data into a DataFrame
-                df = pd.read_csv(data_io)
+                try:
+                    df = pd.read_csv(data_io)
+                except pd.errors.ParserError as parse_error:
+                    st.error(f"CSV Parsing Error: {parse_error}")
 
                 # Save the DataFrame to a CSV file
                 csv_file_path = 'csv_output.csv'
