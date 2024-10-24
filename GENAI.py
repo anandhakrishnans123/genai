@@ -22,7 +22,7 @@ if api_key:
         st.image(img, caption='Uploaded Image', use_column_width=True)
 
         # Generate CSV from image
-        if st.button("Convert Image to CSV"):
+        if st.button("Image to CSV"):
             # Assuming the model takes image input directly
             try:
                 # Pass the image (PIL Image object) to the model directly
