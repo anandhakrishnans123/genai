@@ -1,13 +1,13 @@
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
-from io import StringIO
+from io import StringIO  # Import StringIO
 from PIL import Image
 
 st.title("Image to CSV Converter")
 
 # Input for API key
-api_key = "AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
+api_key = st.text_input("Enter your API key", type="password")
 
 if api_key:
     # Configure the Gemini Pro API
@@ -24,21 +24,22 @@ if api_key:
         # Generate CSV from image
         if st.button("Convert Image to CSV"):
             try:
-                # Assuming the model takes image input directly
-                response = model.generate_content(img)  # Replace with actual image-to-text API call if available
+                # Create a prompt for the model
+                prompt = "Extract data from the uploaded image and convert it to CSV format."
+                
+                # Pass the image and prompt to the model
+                response = model.generate_content([prompt, img])  # Assuming this format works with your API
                 csv_result = response.text
 
-                # Preprocess the CSV result
-                # Assuming the values are space-separated, modify as needed
-                rows = csv_result.splitlines()  # Split rows
-                rows = [row.split('|') for row in rows]  # Split columns by pipe '|' or other delimiter
+                # Use StringIO to simulate a file-like object for pandas
+                data_io = StringIO(csv_result)
 
-                # Create a DataFrame manually if CSV format is incorrect
-                df = pd.DataFrame(rows)
+                # Read the data into a DataFrame
+                df = pd.read_csv(data_io)
 
                 # Save the DataFrame to a CSV file
                 csv_file_path = 'csv_output.csv'
-                df.to_csv(csv_file_path, index=False, header=False)  # Save without headers, modify if needed
+                df.to_csv(csv_file_path, index=False)
 
                 st.success(f"CSV file saved as {csv_file_path}")
                 st.write(df)  # Display the DataFrame
