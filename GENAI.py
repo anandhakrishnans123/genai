@@ -8,7 +8,7 @@ from PIL import Image
 import os
 
 # Configure your API key securely
-genai.configure(api_key=os.getenv("GENAI_API_KEY"))  # Use environment variable
+genai.configure(api_key=os.getenv("AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"))  # Use environment variable
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 st.title("Image to CSV Converter")
