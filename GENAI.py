@@ -48,19 +48,19 @@ if api_key:
                     df = pd.read_csv(data_io)
                 except pd.errors.ParserError as parse_error:
                     st.error(f"CSV Parsing Error: {parse_error}")
-                    return  # Exit the function if parsing fails
 
-                # Save the DataFrame to a CSV file
-                csv_file_path = 'csv_output.csv'
-                df.to_csv(csv_file_path, index=False)
+                # Proceed if DataFrame was created successfully
+                if df is not None:
+                    # Save the DataFrame to a CSV file
+                    csv_file_path = 'csv_output.csv'
+                    df.to_csv(csv_file_path, index=False)
 
-                st.success(f"CSV file saved as {csv_file_path}")
-                st.write(df)  # Display the DataFrame
+                    st.success(f"CSV file saved as {csv_file_path}")
+                    st.write(df)  # Display the DataFrame
 
-                # Provide a download link
-                with open(csv_file_path, "rb") as f:
-                    st.download_button("Download CSV", f, file_name=csv_file_path)
-
+                    # Provide a download link
+                    with open(csv_file_path, "rb") as f:
+                        st.download_button("Download CSV", f, file_name=csv_file_path)
             except Exception as e:
                 st.error(f"An error occurred: {e}")
 else:
