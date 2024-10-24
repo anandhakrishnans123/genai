@@ -1,13 +1,14 @@
-# streamlit_app.py
-
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
 from io import StringIO
 from PIL import Image
-api_key="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
-# Make sure to replace this with your actual API key
-genai.configure(api_key)  # Replace with your API key
+import os
+import tempfile
+
+# Load API key from an environment variable
+api_key = os.getenv("GENAI_API_KEY")  # Set your environment variable
+genai.configure(api_key)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 st.title("Image to Text and CSV Converter")
@@ -23,32 +24,42 @@ if uploaded_file is not None:
     if st.button("Convert Image to Text"):
         prompt = "image to text"
         response = model.generate_content([prompt, img])
-        text_result = response.text
-        st.subheader("Extracted Text:")
-        st.write(text_result)
+        
+        if response:
+            text_result = response.text
+            st.subheader("Extracted Text:")
+            st.write(text_result)
+        else:
+            st.error("Failed to extract text from the image.")
 
         # Generate CSV from image
         if st.button("Convert Image to CSV"):
             prompt = "image to csv"
             response = model.generate_content([prompt, img])
-            csv_result = response.text
             
-            # Use StringIO to simulate a file-like object for pandas
-            data_io = StringIO(csv_result)
-            
-            # Read the data into a DataFrame
-            df = pd.read_csv(data_io)
-            
-            # Save the DataFrame to a CSV file
-            csv_file_path = 'csv_output.csv'
-            df.to_csv(csv_file_path, index=False)
-            
-            st.success(f"CSV file saved as {csv_file_path}")
-            st.write(df)  # Display the DataFrame
-            
-            # Provide a download link
-            with open(csv_file_path, "rb") as f:
-                st.download_button("Download CSV", f, file_name=csv_file_path)
+            if response:
+                csv_result = response.text
+                # Use StringIO to simulate a file-like object for pandas
+                data_io = StringIO(csv_result)
+                
+                try:
+                    # Read the data into a DataFrame
+                    df = pd.read_csv(data_io)
+                    # Create a temporary file to save the DataFrame
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp_file:
+                        csv_file_path = tmp_file.name
+                        df.to_csv(csv_file_path, index=False)
+                    
+                    st.success(f"CSV file saved as {csv_file_path}")
+                    st.write(df)  # Display the DataFrame
+                    
+                    # Provide a download link
+                    with open(csv_file_path, "rb") as f:
+                        st.download_button("Download CSV", f, file_name=os.path.basename(csv_file_path))
+                except Exception as e:
+                    st.error(f"Error reading the CSV data: {e}")
+            else:
+                st.error("Failed to generate CSV from the image.")
 
 # List available models
 st.subheader("Available Models")
