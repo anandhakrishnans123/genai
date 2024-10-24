@@ -7,7 +7,7 @@ from PIL import Image
 st.title("Image to CSV Converter")
 
 # Input for API key
-api_key = st.text_input("Enter your API key", type="password")
+api_key = "AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
 
 if api_key:
     # Configure the Gemini Pro API
