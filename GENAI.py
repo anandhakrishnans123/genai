@@ -25,7 +25,7 @@ if api_key:
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract data from the uploaded image and convert it to CSV format."
+                prompt = "Extract data from the uploaded image, ensuring that every cell value is accurately recognized and captured. Convert the extracted data into CSV format, maintaining the original structure and layout of the data as presented in the image. Include headers and ensure that any special characters or formatting are preserved in the CSV output."
                 
                 # Pass the image and prompt to the model
                 response = model.generate_content([prompt, img])  # Assuming this format works with your API
