@@ -1,0 +1,10 @@
+google.generativeai
+google-cloud-aiplatform
+google-cloud
+transformers
+openai
+# Other dependencies you may need
+numpy
+pandas
+matplotlib
+scikit-learn
