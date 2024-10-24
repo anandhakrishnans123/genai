@@ -5,9 +5,9 @@ import google.generativeai as genai
 import pandas as pd
 from io import StringIO
 from PIL import Image
-
+api_key="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
 # Make sure to replace this with your actual API key
-genai.configure(api_key="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c")  # Replace with your API key
+genai.configure(api_key)  # Replace with your API key
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 st.title("Image to Text and CSV Converter")
