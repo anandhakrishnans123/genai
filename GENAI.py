@@ -1,6 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
+from io import StringIO  # Missing import for StringIO
 from PIL import Image
 
 st.title("Image to CSV Converter")
