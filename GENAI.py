@@ -7,7 +7,7 @@ from io import StringIO
 from PIL import Image
 
 # Make sure to replace this with your actual API key
-genai.configure(api_key="YOUR_API_KEY")  # Replace with your API key
+genai.configure(api_key="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c")  # Replace with your API key
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 st.title("Image to Text and CSV Converter")
