@@ -25,7 +25,7 @@ if api_key:
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract data from the uploaded image and convert it to CSV format."
+                prompt = "Analyze the provided image containing a table of furnace oil stock data. Extract the relevant information, including opening balance, TDS, shift details, water consumption, steam generation, fuel tank levels, and consumption ratios. Organize the extracted data into a structured JSON format, adhering to the schema provided above. Ensure accurate data extraction and formatting to facilitate further analysis and reporting."
                 
                 # Pass the image and prompt to the model
                 response = model.generate_content([prompt, img])  # Assuming this format works with your API
