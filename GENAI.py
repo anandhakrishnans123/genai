@@ -23,36 +23,45 @@ if api_key:
 
         # Generate CSV from image
         if st.button("Convert Image to CSV"):
-            try:
-                # Create a prompt for the model
-                prompt = "Extract data from the uploaded image and convert it to TEXT."
-                # Pass the image and prompt to the model
-                response = model.generate_content([prompt, img])  # Assuming this format works with your API
-                st.write(response.text)
-                prompt1 = "Extract data from the txt and convert it into csv"
-                # Pass the image and prompt to the model
-                response1 = model.generate_content([prompt, response])  # Assuming this format works with your API
+    try:
+        # Create a prompt for the model to extract text data from the image
+        prompt = "Extract data from the uploaded image and convert it to TEXT."
+        
+        # Pass the image and prompt to the model to generate content
+        response = model.generate_content(prompt)
+        
+        # Extract the text content from the response
+        extracted_text = response.result.candidates[0].content.parts[0].text
+        
+        # Display the extracted text for verification
+        st.text_area("Extracted Text", extracted_text, height=150)
 
-                csv_result = response1.text
+        # Simulate a CSV structure if necessary (depending on the format of extracted text)
+        prompt1 = "Extract data from the text and format it as CSV."
+        response1 = model.generate_content([prompt1, extracted_text])
+        
+        # Extract CSV formatted text
+        csv_result = response1.result.candidates[0].content.parts[0].text
+        
+        # Use StringIO to simulate a file-like object for pandas
+        data_io = StringIO(csv_result)
+        
+        # Read the data into a DataFrame
+        df = pd.read_csv(data_io, sep='|')  # Adjust delimiter if needed
+        
+        # Save the DataFrame to a CSV file
+        csv_file_path = 'csv_output.csv'
+        df.to_csv(csv_file_path, index=False)
+        
+        st.success(f"CSV file saved as {csv_file_path}")
+        st.write(df)  # Display the DataFrame
+        
+        # Provide a download link
+        with open(csv_file_path, "rb") as f:
+            st.download_button("Download CSV", f, file_name=csv_file_path)
 
-                # Use StringIO to simulate a file-like object for pandas
-                data_io = StringIO(csv_result)
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
-                # Read the data into a DataFrame
-                df = pd.read_csv(data_io)
-
-                # Save the DataFrame to a CSV file
-                csv_file_path = 'csv_output.csv'
-                df.to_csv(csv_file_path, index=False)
-
-                st.success(f"CSV file saved as {csv_file_path}")
-                st.write(df)  # Display the DataFrame
-
-                # Provide a download link
-                with open(csv_file_path, "rb") as f:
-                    st.download_button("Download CSV", f, file_name=csv_file_path)
-
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
 else:
     st.warning("Please enter your API key to proceed.")
