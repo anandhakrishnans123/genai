@@ -7,7 +7,7 @@ from PIL import Image
 st.title("Image to CSV Converter")
 
 # Input for API key
-api_key ="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
+api_key = "AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
 
 if api_key:
     # Configure the Gemini Pro API
@@ -21,14 +21,30 @@ if api_key:
         img = Image.open(uploaded_file)
         st.image(img, caption='Uploaded Image', use_column_width=True)
 
-        # Generate CSV from image
+        # Button to extract text from the image
+        if st.button("Convert Image to Text"):
+            try:
+                # Create a prompt for extracting text
+                text_prompt = "Extract text from the uploaded image."
+                # Pass the image and prompt to the model
+                text_response = model.generate_content([text_prompt, img])  # Check the actual method call if needed
+                extracted_text = text_response.text
+
+                # Display the extracted text
+                st.subheader("Extracted Text")
+                st.text(extracted_text)
+
+            except Exception as e:
+                st.error(f"An error occurred while extracting text: {e}")
+
+        # Button to convert image to CSV
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract data from the uploaded image and convert it to CSV format."
+                csv_prompt = "Extract data from the uploaded image and convert it to CSV format."
                 # Pass the image and prompt to the model
-                response = model.generate_content([prompt, img])  # Assuming this format works with your API
-                csv_result = response.text
+                csv_response = model.generate_content([csv_prompt, img])  # Check actual method call format
+                csv_result = csv_response.text
 
                 # Use StringIO to simulate a file-like object for pandas
                 data_io = StringIO(csv_result)
@@ -48,6 +64,6 @@ if api_key:
                     st.download_button("Download CSV", f, file_name=csv_file_path)
 
             except Exception as e:
-                st.error(f"An error occurred: {e}")
+                st.error(f"An error occurred while converting to CSV: {e}")
 else:
     st.warning("Please enter your API key to proceed.")
