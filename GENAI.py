@@ -1,17 +1,18 @@
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
-from io import StringIO
+from io import StringIO  # Import StringIO
 from PIL import Image
 
 st.title("Image to CSV Converter")
 
 # Input for API key
-api_key = st.text_input("Enter your API key", type="password")
+api_key ="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
 
 if api_key:
     # Configure the Gemini Pro API
     genai.configure(api_key=api_key)
+    model = genai.GenerativeModel("gemini-1.5-flash")
 
     # Upload an image
     uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
@@ -24,13 +25,12 @@ if api_key:
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract table data from the uploaded image and convert it to CSV format."
-
-                # Convert image to text (assuming LayoutLLM-like functionality)
-                response = genai.text_generation(prompt=prompt)  # Replace with actual image-to-text API logic
+                prompt = "Extract data from the uploaded image and convert it to CSV format."
+                # Pass the image and prompt to the model
+                response = model.generate_content([prompt, img])  # Assuming this format works with your API
                 csv_result = response.text
 
-                # Simulate a file-like object for pandas
+                # Use StringIO to simulate a file-like object for pandas
                 data_io = StringIO(csv_result)
 
                 # Read the data into a DataFrame
