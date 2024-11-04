@@ -1,14 +1,13 @@
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
-from io import StringIO  # For handling text as a file-like object
+from io import StringIO  # Import StringIO
 from PIL import Image
 
-# Streamlit app title
 st.title("Image to CSV Converter")
 
 # Input for API key
-api_key = st.text_input("Enter your API key", type="password")
+api_key ="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
 
 if api_key:
     # Configure the Gemini Pro API
@@ -25,26 +24,17 @@ if api_key:
         # Generate CSV from image
         if st.button("Convert Image to CSV"):
             try:
-                # Create a prompt for extracting text from the image
-                prompt = "Extract data from the uploaded image and convert it to TEXT."
-                response = model.generate_content(prompt)  # Pass only the prompt
-
-                # Extract the text content from the response directly
-                extracted_text = response.candidates[0].content.parts[0].text
-                st.text_area("Extracted Text", extracted_text, height=150)  # Display extracted text
-
-                # Create a prompt for converting extracted text to CSV format
-                prompt1 = "Format the extracted text as CSV."
-                response1 = model.generate_content(prompt1)
-
-                # Extract CSV formatted text
-                csv_result = response1.candidates[0].content.parts[0].text
+                # Create a prompt for the model
+                prompt = "Extract data from the uploaded image and convert it to CSV format."
+                # Pass the image and prompt to the model
+                response = model.generate_content([prompt, img])  # Assuming this format works with your API
+                csv_result = response.text
 
                 # Use StringIO to simulate a file-like object for pandas
                 data_io = StringIO(csv_result)
 
                 # Read the data into a DataFrame
-                df = pd.read_csv(data_io, sep='|')  # Adjust delimiter if needed
+                df = pd.read_csv(data_io)
 
                 # Save the DataFrame to a CSV file
                 csv_file_path = 'csv_output.csv'
