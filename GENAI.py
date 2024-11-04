@@ -29,8 +29,8 @@ if api_key:
                 prompt = "Extract data from the uploaded image and convert it to TEXT."
                 response = model.generate_content(prompt)  # Pass only the prompt
 
-                # Extract the text content from the response
-                extracted_text = response.result.candidates[0].content.parts[0].text
+                # Extract the text content from the response directly
+                extracted_text = response.candidates[0].content.parts[0].text
                 st.text_area("Extracted Text", extracted_text, height=150)  # Display extracted text
 
                 # Create a prompt for converting extracted text to CSV format
@@ -38,7 +38,7 @@ if api_key:
                 response1 = model.generate_content(prompt1)
 
                 # Extract CSV formatted text
-                csv_result = response1.result.candidates[0].content.parts[0].text
+                csv_result = response1.candidates[0].content.parts[0].text
 
                 # Use StringIO to simulate a file-like object for pandas
                 data_io = StringIO(csv_result)
