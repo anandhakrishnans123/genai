@@ -25,30 +25,29 @@ if api_key:
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract data from the uploaded image and convert it to csv format."
+                prompt = "Extract data from the uploaded image and convert it to CSV format."
                 # Pass the image and prompt to the model
-                response = model.generate_content([prompt, img])
-                st.write(response.text)# Assuming this format works with your API
-            #     csv_result = response.text
+                response = model.generate_content([prompt, img])  # Assuming this format works with your API
+                csv_result = response.text
 
-            #     # Use StringIO to simulate a file-like object for pandas
-            #     data_io = StringIO(csv_result)
+                # Use StringIO to simulate a file-like object for pandas
+                data_io = StringIO(csv_result)
 
-            #     # Read the data into a DataFrame
-            #     df = pd.read_csv(data_io)
+                # Read the data into a DataFrame
+                df = pd.read_csv(data_io)
 
-            #     # Save the DataFrame to a CSV file
-            #     csv_file_path = 'csv_output.csv'
-            #     df.to_csv(csv_file_path, index=False)
+                # Save the DataFrame to a CSV file
+                csv_file_path = 'csv_output.csv'
+                df.to_csv(csv_file_path, index=False)
 
-            #     st.success(f"CSV file saved as {csv_file_path}")
-            #     st.write(df)  # Display the DataFrame
+                st.success(f"CSV file saved as {csv_file_path}")
+                st.write(df)  # Display the DataFrame
 
-            #     # Provide a download link
-            #     with open(csv_file_path, "rb") as f:
-            #         st.download_button("Download CSV", f, file_name=csv_file_path)
+                # Provide a download link
+                with open(csv_file_path, "rb") as f:
+                    st.download_button("Download CSV", f, file_name=csv_file_path)
 
-            # except Exception as e:
-            #     st.error(f"An error occurred: {e}")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
 else:
     st.warning("Please enter your API key to proceed.")
