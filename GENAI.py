@@ -25,10 +25,15 @@ if api_key:
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract data from the uploaded image and convert it to CSV format."
+                prompt = "Extract data from the uploaded image and convert it to TEXT."
                 # Pass the image and prompt to the model
                 response = model.generate_content([prompt, img])  # Assuming this format works with your API
-                csv_result = response.text
+                st.write(response.text)
+                prompt1 = "Extract data from the txt and convert it into csv"
+                # Pass the image and prompt to the model
+                response1 = model.generate_content([prompt, response])  # Assuming this format works with your API
+
+                csv_result = response1.text
 
                 # Use StringIO to simulate a file-like object for pandas
                 data_io = StringIO(csv_result)
