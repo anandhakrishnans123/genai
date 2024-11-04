@@ -1,13 +1,14 @@
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
-from io import StringIO  # Import StringIO
+from io import StringIO  # For handling text as a file-like object
 from PIL import Image
 
+# Streamlit app title
 st.title("Image to CSV Converter")
 
 # Input for API key
-api_key ="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
+api_key = st.text_input("Enter your API key", type="password")
 
 if api_key:
     # Configure the Gemini Pro API
@@ -23,45 +24,40 @@ if api_key:
 
         # Generate CSV from image
         if st.button("Convert Image to CSV"):
-    try:
-        # Create a prompt for the model to extract text data from the image
-        prompt = "Extract data from the uploaded image and convert it to TEXT."
-        
-        # Pass the image and prompt to the model to generate content
-        response = model.generate_content(prompt)
-        
-        # Extract the text content from the response
-        extracted_text = response.result.candidates[0].content.parts[0].text
-        
-        # Display the extracted text for verification
-        st.text_area("Extracted Text", extracted_text, height=150)
+            try:
+                # Create a prompt for extracting text from the image
+                prompt = "Extract data from the uploaded image and convert it to TEXT."
+                response = model.generate_content(prompt)  # Pass only the prompt
 
-        # Simulate a CSV structure if necessary (depending on the format of extracted text)
-        prompt1 = "Extract data from the text and format it as CSV."
-        response1 = model.generate_content([prompt1, extracted_text])
-        
-        # Extract CSV formatted text
-        csv_result = response1.result.candidates[0].content.parts[0].text
-        
-        # Use StringIO to simulate a file-like object for pandas
-        data_io = StringIO(csv_result)
-        
-        # Read the data into a DataFrame
-        df = pd.read_csv(data_io, sep='|')  # Adjust delimiter if needed
-        
-        # Save the DataFrame to a CSV file
-        csv_file_path = 'csv_output.csv'
-        df.to_csv(csv_file_path, index=False)
-        
-        st.success(f"CSV file saved as {csv_file_path}")
-        st.write(df)  # Display the DataFrame
-        
-        # Provide a download link
-        with open(csv_file_path, "rb") as f:
-            st.download_button("Download CSV", f, file_name=csv_file_path)
+                # Extract the text content from the response
+                extracted_text = response.result.candidates[0].content.parts[0].text
+                st.text_area("Extracted Text", extracted_text, height=150)  # Display extracted text
 
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
+                # Create a prompt for converting extracted text to CSV format
+                prompt1 = "Format the extracted text as CSV."
+                response1 = model.generate_content(prompt1)
 
+                # Extract CSV formatted text
+                csv_result = response1.result.candidates[0].content.parts[0].text
+
+                # Use StringIO to simulate a file-like object for pandas
+                data_io = StringIO(csv_result)
+
+                # Read the data into a DataFrame
+                df = pd.read_csv(data_io, sep='|')  # Adjust delimiter if needed
+
+                # Save the DataFrame to a CSV file
+                csv_file_path = 'csv_output.csv'
+                df.to_csv(csv_file_path, index=False)
+
+                st.success(f"CSV file saved as {csv_file_path}")
+                st.write(df)  # Display the DataFrame
+
+                # Provide a download link
+                with open(csv_file_path, "rb") as f:
+                    st.download_button("Download CSV", f, file_name=csv_file_path)
+
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
 else:
     st.warning("Please enter your API key to proceed.")
