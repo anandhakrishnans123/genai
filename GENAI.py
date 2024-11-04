@@ -27,7 +27,8 @@ if api_key:
                 # Create a prompt for the model
                 prompt = "Extract data from the uploaded image and convert it to text."
                 # Pass the image and prompt to the model
-                response = model.generate_content([prompt, img])  # Assuming this format works with your API
+                response = model.generate_content([prompt, img])
+                st.write(response.text)# Assuming this format works with your API
                 csv_result = response.text
 
                 # Use StringIO to simulate a file-like object for pandas
