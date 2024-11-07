@@ -12,7 +12,7 @@ api_key ="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
 if api_key:
     # Configure the Gemini Pro API
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash-8b")
+    model = genai.GenerativeModel("gemini-1.5-flash")
 
     # Upload an image
     uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
