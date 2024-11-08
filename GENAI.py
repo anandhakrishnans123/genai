@@ -25,7 +25,7 @@ if api_key:
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract data from the uploaded image,if the image it make it straight, including handwritten eng;ish  text,numbers and convert it to a CSV format. If possible, identify the type of data (e.g., names, dates, numbers) and structure the CSV accordingly. Also only give out the output table no other specific information is required"
+                prompt = "Extract data from the uploaded image,if the image is rotated it make it straight, including handwritten eng;ish  text,numbers and convert it to a CSV format. If possible, identify the type of data (e.g., names, dates, numbers) and structure the CSV accordingly. Also only give out the output table no other specific information is required"
                 # Pass the image and prompt to the model
                 response = model.generate_content([prompt, img])  # Assuming this format works with your API
                 csv_result = response.text
