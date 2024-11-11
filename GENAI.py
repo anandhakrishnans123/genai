@@ -29,8 +29,8 @@ if api_key:
             st.session_state.rotation_angle += 90
             st.session_state.rotation_angle %= 360  # Ensure angle stays within 0-359 degrees
         
-        # Rotate the image and display it
-        rotated_img = img.rotate(st.session_state.rotation_angle)
+        # Rotate the image and expand it to ensure full dimensions are kept
+        rotated_img = img.rotate(st.session_state.rotation_angle, expand=True)
         st.image(rotated_img, caption='Uploaded Image (Rotated)', use_column_width=True)
 
         # Generate CSV from image
