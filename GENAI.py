@@ -7,7 +7,7 @@ from PIL import Image
 st.title("Image to CSV Converter")
 
 # Input for API key
-api_key ="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
+api_key = "AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
 
 if api_key:
     # Configure the Gemini Pro API
@@ -19,15 +19,27 @@ if api_key:
 
     if uploaded_file is not None:
         img = Image.open(uploaded_file)
-        st.image(img, caption='Uploaded Image', use_column_width=True)
+        
+        # Initialize session state to track image rotation
+        if 'rotation_angle' not in st.session_state:
+            st.session_state.rotation_angle = 0
+        
+        # Button to rotate the image by 90 degrees
+        if st.button("Rotate Image 90°"):
+            st.session_state.rotation_angle += 90
+            st.session_state.rotation_angle %= 360  # Ensure angle stays within 0-359 degrees
+        
+        # Rotate the image and display it
+        rotated_img = img.rotate(st.session_state.rotation_angle)
+        st.image(rotated_img, caption='Uploaded Image (Rotated)', use_column_width=True)
 
         # Generate CSV from image
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract data from the uploaded image, extract the data including handwritten  text,numbers and convert it to a CSV format. If possible, identify the type of data (e.g., names, dates, numbers) and structure the CSV accordingly. Also only give out the output table no other specific information is required"
+                prompt = "Extract data from the uploaded image, extract the data including handwritten text, numbers and convert it to a CSV format. If possible, identify the type of data (e.g., names, dates, numbers) and structure the CSV accordingly. Also only give out the output table no other specific information is required"
                 # Pass the image and prompt to the model
-                response = model.generate_content([prompt, img])  # Assuming this format works with your API
+                response = model.generate_content([prompt, rotated_img])  # Assuming this format works with your API
                 csv_result = response.text
 
                 # Use StringIO to simulate a file-like object for pandas
