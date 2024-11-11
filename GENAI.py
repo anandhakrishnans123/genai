@@ -1,13 +1,13 @@
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
-from io import StringIO  # Import StringIO
-from PIL import Image
+from io import StringIO
+from PIL import Image, ExifTags
 
 st.title("Image to CSV Converter")
 
 # Input for API key
-api_key ="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
+api_key = "AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
 
 if api_key:
     # Configure the Gemini Pro API
@@ -19,15 +19,35 @@ if api_key:
 
     if uploaded_file is not None:
         img = Image.open(uploaded_file)
+
+        # Fix image orientation using EXIF data if available
+        try:
+            for orientation in ExifTags.TAGS.keys():
+                if ExifTags.TAGS[orientation] == 'Orientation':
+                    break
+            exif = img._getexif()
+            if exif is not None:
+                orientation = exif.get(orientation)
+                if orientation == 3:
+                    img = img.rotate(180, expand=True)
+                elif orientation == 6:
+                    img = img.rotate(270, expand=True)
+                elif orientation == 8:
+                    img = img.rotate(90, expand=True)
+        except (AttributeError, KeyError, IndexError):
+            # Cases where there is no EXIF data
+            pass
+
         st.image(img, caption='Uploaded Image', use_column_width=True)
 
         # Generate CSV from image
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract data from the uploaded image, extract the data including handwritten  text,numbers and convert it to a CSV format. If possible, identify the type of data (e.g., names, dates, numbers) and structure the CSV accordingly. Also only give out the output table no other specific information is required"
-                # Pass the image and prompt to the model
-                response = model.generate_content([prompt, img])  # Assuming this format works with your API
+                prompt = "Extract data from the uploaded image, extract the data including handwritten text, numbers, and convert it to a CSV format. If possible, identify the type of data (e.g., names, dates, numbers) and structure the CSV accordingly. Also, only give out the output table; no other specific information is required."
+                
+                # Pass the image and prompt to the model (assuming the API can handle this)
+                response = model.generate_content([prompt, img])
                 csv_result = response.text
 
                 # Use StringIO to simulate a file-like object for pandas
