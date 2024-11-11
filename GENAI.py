@@ -1,65 +1,53 @@
 import streamlit as st
-from PIL import Image, ExifTags
-import numpy as np
-import cv2
-import pytesseract
+import google.generativeai as genai
+import pandas as pd
+from io import StringIO  # Import StringIO
+from PIL import Image
 
-# Ensure pytesseract is installed and configured correctly
-# pytesseract.pytesseract.tesseract_cmd = r'path_to_tesseract'  # Uncomment and set the path if needed
+st.title("Image to CSV Converter")
 
-def correct_image_orientation(image):
-    """Corrects the orientation of an image using EXIF data or manual analysis."""
-    try:
-        # Check EXIF orientation data
-        for orientation in ExifTags.TAGS.keys():
-            if ExifTags.TAGS[orientation] == 'Orientation':
-                break
-        exif = image._getexif()
-        if exif is not None:
-            orientation = exif.get(orientation)
-            if orientation == 3:
-                image = image.rotate(180, expand=True)
-            elif orientation == 6:
-                image = image.rotate(270, expand=True)
-            elif orientation == 8:
-                image = image.rotate(90, expand=True)
-    except (AttributeError, KeyError, IndexError):
-        # No EXIF data or issue reading it, move to manual check
-        pass
+# Input for API key
+api_key ="AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
 
-    # Convert the image to a numpy array and analyze its orientation
-    image_array = np.array(image)
-    if image_array.shape[0] > image_array.shape[1]:  # Check if the image is in portrait mode
-        image = image.rotate(90, expand=True)
+if api_key:
+    # Configure the Gemini Pro API
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel("gemini-1.5-flash")
 
-    return image
+    # Upload an image
+    uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
 
-def detect_text_orientation(image):
-    """Detects and corrects the orientation using pytesseract."""
-    orientation_data = pytesseract.image_to_osd(image)
-    if "Rotate: 90" in orientation_data:
-        image = image.rotate(270, expand=True)
-    elif "Rotate: 180" in orientation_data:
-        image = image.rotate(180, expand=True)
-    elif "Rotate: 270" in orientation_data:
-        image = image.rotate(90, expand=True)
-    return image
+    if uploaded_file is not None:
+        img = Image.open(uploaded_file)
+        st.image(img, caption='Uploaded Image', use_column_width=True)
 
-st.title("Automated Image Orientation Correction")
+        # Generate CSV from image
+        if st.button("Convert Image to CSV"):
+            try:
+                # Create a prompt for the model
+                prompt = "Extract data from the uploaded image, extract the data including handwritten  text,numbers and convert it to a CSV format. If possible, identify the type of data (e.g., names, dates, numbers) and structure the CSV accordingly. Also only give out the output table no other specific information is required"
+                # Pass the image and prompt to the model
+                response = model.generate_content([prompt, img])  # Assuming this format works with your API
+                csv_result = response.text
 
-# Upload an image
-uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
+                # Use StringIO to simulate a file-like object for pandas
+                data_io = StringIO(csv_result)
 
-if uploaded_file is not None:
-    img = Image.open(uploaded_file)
+                # Read the data into a DataFrame
+                df = pd.read_csv(data_io)
 
-    # Step 1: Correct orientation using EXIF data
-    img = correct_image_orientation(img)
+                # Save the DataFrame to a CSV file
+                csv_file_path = 'csv_output.csv'
+                df.to_csv(csv_file_path, index=False)
 
-    # Step 2: Further analyze and correct using OCR if needed
-    img = detect_text_orientation(img)
+                st.success(f"CSV file saved as {csv_file_path}")
+                st.write(df)  # Display the DataFrame
 
-    st.image(img, caption='Corrected Image', use_column_width=True)
-    st.success("Image orientation corrected!")
+                # Provide a download link
+                with open(csv_file_path, "rb") as f:
+                    st.download_button("Download CSV", f, file_name=csv_file_path)
+
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
 else:
-    st.info("Please upload an image to proceed.")
+    st.warning("Please enter your API key to proceed.")
