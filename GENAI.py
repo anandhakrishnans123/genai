@@ -70,15 +70,15 @@ if api_key:
                     prompt = "Extract the value of net payable amount, title of the image, name and address of the bill receiver, date of billing, due date, and circle name from the image.If there is confusion with some values return null.give response as csv"
                     response = model.generate_content([prompt, full_text])  # Assuming this format works with your API
                     csv_result = response.text
-                    data_io = StringIO(csv_result)
-                    csv_file_path = 'csv_output.csv'
-                    df = pd.read_csv(data_io)
+                    # data_io = StringIO(csv_result)
+                    # csv_file_path = 'csv_output.csv'
+                    # df = pd.read_csv(data_io)
                     
-                    # Save the DataFrame to a CSV file
-                    csv_file_path = 'csv_output.csv'
-                    df.to_csv(csv_file_path, index=False)
-                    st.success(f"CSV file saved as {csv_file_path}")
-                    st.write(df)
+                    # # Save the DataFrame to a CSV file
+                    # csv_file_path = 'csv_output.csv'
+                    # df.to_csv(csv_file_path, index=False)
+                    # st.success(f"CSV file saved as {csv_file_path}")
+                    st.write(csv_result)
 #                     st.download_button(
 #     label="Download CSV",
 #     data=csv_result,  # CSV data as byte content
