@@ -131,7 +131,7 @@ if api_key:
                     # st.write(df2)
                     st.download_button(
                         label="Download CSV",
-                        data=df2.to_xlsx(index=False),
+                        data=df2.to_excel(index=False),
                         file_name="downloaded_data.csv",
                         mime="text/csv"
                     )
