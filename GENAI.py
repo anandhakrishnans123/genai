@@ -45,18 +45,7 @@ if api_key:
                     # Create a prompt for the model
                     prompt = "Extract the value of net payable amount, title of the image, name and address of the bill receiver, date of billing, due date, and circle name from the image"
                     response = model.generate_content([prompt, rotated_img])  # Assuming this format works with your API
-                    csv_result = response.text
-                    data_io = StringIO(csv_result)
-                    csv_file_path = 'csv_output.csv'
-                    df = pd.read_csv(data_io)
-
-                    # Save the DataFrame to a CSV file
-                    csv_file_path = 'csv_output.csv'
-                    df.to_csv(csv_file_path, index=False)
-                    st.success(f"CSV file saved as {csv_file_path}")
-                    st.write(df)
-                    with open(csv_file_path, "rb") as f:
-                        st.download_button("Download CSV", f, file_name=csv_file_path)
+                    st.write(response.txt)
 
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
@@ -78,9 +67,20 @@ if api_key:
                     # Create a prompt for the model
                     prompt = "Extract the value of net payable amount, title of the image, name and address of the bill receiver, date of billing, due date, and circle name from the image.If there is confusion with some values return null.give response as csv"
                     response = model.generate_content([prompt, full_text])  # Assuming this format works with your API
-                    
+                    csv_result = response.text
+                    data_io = StringIO(csv_result)
+                    csv_file_path = 'csv_output.csv'
+                    df = pd.read_csv(data_io)
+
+                    # Save the DataFrame to a CSV file
+                    csv_file_path = 'csv_output.csv'
+                    df.to_csv(csv_file_path, index=False)
+                    st.success(f"CSV file saved as {csv_file_path}")
+                    st.write(df)
+                    with open(csv_file_path, "rb") as f:
+                        st.download_button("Download CSV", f, file_name=csv_file_path)
                     # Print the response from the API
-                    st.write(response.text)
+                    
 
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
