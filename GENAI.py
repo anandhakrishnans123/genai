@@ -6,6 +6,7 @@ import io  # To handle in-memory file stream
 from io import StringIO
 import pandas as pd
 from datetime import datetime
+
 # Set up the Streamlit app title
 st.title("PDF or Image to Text Extractor")
 
@@ -77,16 +78,9 @@ if api_key:
                     response = model.generate_content([prompt, full_text])
 
                     # Debugging: Inspect raw response
-                    # Debugging: Inspect raw response
                     csv_result = response.text
                     st.write("Raw Response from API:")
                     st.write(csv_result)
-                    
-                    # Clean and parse CSV
-                    # Debugging: Inspect raw response
-                    # csv_result = response.text
-                    # st.write("Raw Response from API:")
-                    # st.write(csv_result)
                     
                     # Clean and parse CSV
                     # Strip leading/trailing whitespace
@@ -98,7 +92,6 @@ if api_key:
                         csv_result = csv_result.split("\n", 1)[-1]  # Remove the first line (metadata/description)
                     
                     # Further clean up: remove any extra text that might appear after CSV content
-                    # Assuming that actual CSV rows start from the first valid row (based on the structure)
                     lines = csv_result.split("\n")
                     valid_csv = "\n".join(line for line in lines if ',' in line)  # Only keep lines with commas (CSV rows)
                     
@@ -113,35 +106,41 @@ if api_key:
                     st.success(f"CSV file saved as {csv_file_path}")
                     st.write("Generated DataFrame:")
                     st.write(df)
-                    columns = [
-    'Res_Date', 'Department', 'Facility', 'Start Date', 'End Date', 
-    'Country', 'City', 'Activity', 'Activity Unit', 'Energy Type', 
-    'Energy Unit', 'Energy Consumption', 'Cost', 'Price p/u', 'CF Standard', 'Gas'
-]
 
-# Create an empty DataFrame with the specified columns
+                    columns = [
+                        'Res_Date', 'Department', 'Facility', 'Start Date', 'End Date', 
+                        'Country', 'City', 'Activity', 'Activity Unit', 'Energy Type', 
+                        'Energy Unit', 'Energy Consumption', 'Cost', 'Price p/u', 'CF Standard', 'Gas'
+                    ]
+
+                    # Create an empty DataFrame with the specified columns
                     df2 = pd.DataFrame(columns=columns)
-                    # Download button for CSV
+                    # Add values from the original DataFrame
                     df2['Cost'] = df['net payable amount']
                     df2['End Date'] = df['due date']
                     df2['Start Date'] = df['date of billing']
                     df2['Facility'] = df['name and address of the bill receiver']
                     df2['City'] = df['circle name']
                     df2['Res_Date'] = datetime.now().strftime('%Y-%m-%d')
-                    df2["Energy Unit"]="KWh"
-                    df2['CF Standard']="IMO"
-                    df2['Gas']="CO2"
-                    df2['Country']="India"
-                    df2['Energy Type']="India"
-                    df2["Energy Consumption"]=2000
-                    # st.write(df2)
-                    st.download_button(
-                        label="Download CSV",
-                        data=df2.to_csv(index=False),
-                        file_name="downloaded_data.csv",
-                        mime="text/csv"
-                    )
+                    df2["Energy Unit"] = "KWh"
+                    df2['CF Standard'] = "IMO"
+                    df2['Gas'] = "CO2"
+                    df2['Country'] = "India"
+                    df2['Energy Type'] = "India"
+                    df2["Energy Consumption"] = 2000
 
+                    # Create an in-memory Excel file
+                    excel_buffer = io.BytesIO()
+                    df2.to_excel(excel_buffer, index=False, engine='openpyxl')
+                    excel_buffer.seek(0)  # Move the pointer to the start of the buffer
+
+                    # Download button for Excel
+                    st.download_button(
+                        label="Download Excel",
+                        data=excel_buffer,
+                        file_name="downloaded_data.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
 
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
