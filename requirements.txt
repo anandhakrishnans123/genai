@@ -11,3 +11,4 @@ scikit-learn
 pytesseract
 layoutparser
 pymupdf
+openpyxl
