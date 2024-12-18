@@ -16,7 +16,10 @@ if api_key:
     # Upload an image or a PDF
     uploaded_file = st.file_uploader("Upload an image or PDF", type=["png", "jpg", "jpeg", "pdf"])
 
+    # Debugging: Print the uploaded file type
     if uploaded_file is not None:
+        st.write(f"Uploaded file type: {uploaded_file.type}")
+
         file_type = uploaded_file.type
         if file_type in ["image/png", "image/jpg", "image/jpeg"]:
             # Handle image files
