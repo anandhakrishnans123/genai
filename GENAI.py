@@ -37,7 +37,7 @@ if api_key:
         if st.button("Convert Image to CSV"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract the value of net payable amount from the image"
+                prompt = "Extract the value of net payable amount, title of the image,name and address of the bill reciver,date of billing,due date and circle name from the image"
                 response = model.generate_content([prompt, rotated_img])  # Assuming this format works with your API
                 csv_result = response.text
 
