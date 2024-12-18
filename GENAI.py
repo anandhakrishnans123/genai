@@ -79,8 +79,12 @@ if api_key:
                     df.to_csv(csv_file_path, index=False)
                     st.success(f"CSV file saved as {csv_file_path}")
                     st.write(df)
-                    with open(csv_file_path, "rb") as f:
-                        st.download_button("Download CSV", f, file_name=csv_file_path)
+                    st.download_button(
+    label="Download CSV",
+    data=csv_data,
+    file_name="downloaded_data.csv",
+    mime="text/csv"
+)
                     # Print the response from the API
                     
 
