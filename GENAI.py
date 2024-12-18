@@ -2,6 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 from PIL import Image
 import fitz  # PyMuPDF for PDF handling
+import io  # To handle in-memory file stream
 
 st.title("PDF or Image to Text Extractor")
 
@@ -16,8 +17,8 @@ if api_key:
     # Upload an image or a PDF
     uploaded_file = st.file_uploader("Upload an image or PDF", type=["png", "jpg", "jpeg", "pdf"])
 
-    # Debugging: Print the uploaded file type
     if uploaded_file is not None:
+        # Debugging: Print the uploaded file type
         st.write(f"Uploaded file type: {uploaded_file.type}")
 
         file_type = uploaded_file.type
@@ -53,7 +54,8 @@ if api_key:
 
         elif file_type == "application/pdf":
             # Handle PDF files
-            doc = fitz.open(uploaded_file)
+            pdf_data = uploaded_file.read()  # Read the uploaded file as bytes
+            doc = fitz.open(io.BytesIO(pdf_data))  # Open the PDF from the in-memory byte stream
             full_text = ""
             
             # Extract text from each page
