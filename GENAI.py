@@ -6,10 +6,11 @@ import io  # To handle in-memory file stream
 from io import StringIO
 import pandas as pd
 
+# Set up the Streamlit app title
 st.title("PDF or Image to Text Extractor")
 
 # Input for API key
-api_key = "AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
+api_key = "AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"  # Replace with your API key
 
 if api_key:
     # Configure the Gemini Pro API
@@ -45,7 +46,8 @@ if api_key:
             if st.button("Extract Text from Image"):
                 try:
                     # Create a prompt for the model
-                    prompt = "Extract the value of net payable amount, title of the image, name and address of the bill receiver, date of billing, due date, and circle name from the image"
+                    prompt = ("Extract the value of net payable amount, title of the image, name and address of the bill receiver, "
+                              "date of billing, due date, and circle name from the image.")
                     response = model.generate_content([prompt, rotated_img])  # Assuming this format works with your API
                     st.write(response.txt)
 
@@ -67,27 +69,40 @@ if api_key:
             if st.button("Generate Content from PDF"):
                 try:
                     # Create a prompt for the model
-                    prompt="Extract the following details from the document and return them in a clean CSV format: net payable amount, title, name and address of the bill receiver,  date of billing, due date, and circle name. Ensure each field is in a separate column with appropriate headers, and return 'null' for any missing or unclear data. The CSV should be formatted correctly with commas as delimiters and no extra spaces or errors."
+                    prompt = ("Extract the following details from the document and return them in a clean CSV format: "
+                              "net payable amount, title, name and address of the bill receiver, date of billing, due date, "
+                              "and circle name. Ensure each field is in a separate column with appropriate headers, and return "
+                              "'null' for any missing or unclear data. The CSV should be formatted correctly with commas as delimiters "
+                              "and no extra spaces or errors.")
+                    response = model.generate_content([prompt, full_text])
 
-                    response = model.generate_content([prompt, full_text])  # Assuming this format works with your API
+                    # Debugging: Inspect raw response
                     csv_result = response.text
-                    data_io = StringIO(csv_result)
-                    csv_file_path = 'csv_output.csv'
-                    df = pd.read_csv(data_io)
+                    st.write("Raw Response from API:")
+                    st.write(csv_result)
+
+                    # Clean and parse CSV
+                    if csv_result.startswith("csv"):
+                        csv_result = "\n".join(csv_result.split("\n")[1:])  # Remove the first line if it starts with "csv"
                     
-                    # Save the DataFrame to a CSV file
+                    data_io = StringIO(csv_result)
+                    df = pd.read_csv(data_io)
+
+                    # Save the cleaned DataFrame
                     csv_file_path = 'csv_output.csv'
                     df.to_csv(csv_file_path, index=False)
+
                     st.success(f"CSV file saved as {csv_file_path}")
-                    st.write(csv_result)
+                    st.write("Generated DataFrame:")
+                    st.write(df)
+
+                    # Download button for CSV
                     st.download_button(
-    label="Download CSV",
-    data=csv_result,  # CSV data as byte content
-    file_name="downloaded_data.csv",  # Suggested file name for download
-    mime="text/csv"  # MIME type for CSV files
-)
-                    # Print the response from the API
-                    
+                        label="Download CSV",
+                        data=df.to_csv(index=False),
+                        file_name="downloaded_data.csv",
+                        mime="text/csv"
+                    )
 
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
