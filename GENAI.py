@@ -81,7 +81,7 @@ if api_key:
                     st.write(df)
                     st.download_button(
     label="Download CSV",
-    data=csv_data,  # CSV data as byte content
+    data=csv_result,  # CSV data as byte content
     file_name="downloaded_data.csv",  # Suggested file name for download
     mime="text/csv"  # MIME type for CSV files
 )
