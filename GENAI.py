@@ -128,7 +128,7 @@ if api_key:
                     df2['Country'] = "India"
                     df2['Energy Type'] = "India"
                     df2["Energy Consumption"] = 2000
-                    df2['End date'] = pd.to_datetime(df2['End date'], format='%m/%d/%Y')
+                    df2['End Date'] = pd.to_datetime(df2['End date'], format='%m/%d/%Y')
                     df2['Start Date'] = pd.to_datetime(df2['Start Date'], format='%m/%d/%Y')
                     df2['Res_Date'] = pd.to_datetime(df2['Res_Date'], format='%m/%d/%Y')
 
