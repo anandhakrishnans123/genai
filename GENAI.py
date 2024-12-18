@@ -83,11 +83,27 @@ if api_key:
                     st.write(csv_result)
                     
                     # Clean and parse CSV
-                    csv_result = csv_result.strip()  # Remove leading/trailing whitespace
-                    if csv_result.lower().startswith("csv"):
-                        csv_result = csv_result[csv_result.index("\n") + 1:]  # Remove the first line starting with "csv"
+                    # Debugging: Inspect raw response
+                    csv_result = response.text
+                    st.write("Raw Response from API:")
+                    st.write(csv_result)
                     
-                    data_io = StringIO(csv_result)
+                    # Clean and parse CSV
+                    # Strip leading/trailing whitespace
+                    csv_result = csv_result.strip()
+                    
+                    # Check if the result starts with 'csv' and remove any non-CSV content
+                    if csv_result.lower().startswith("csv"):
+                        # If 'csv' is at the start, remove the first line or prefix before the actual data
+                        csv_result = csv_result.split("\n", 1)[-1]  # Remove the first line (metadata/description)
+                    
+                    # Further clean up: remove any extra text that might appear after CSV content
+                    # Assuming that actual CSV rows start from the first valid row (based on the structure)
+                    lines = csv_result.split("\n")
+                    valid_csv = "\n".join(line for line in lines if ',' in line)  # Only keep lines with commas (CSV rows)
+                    
+                    # Now, read the cleaned CSV content
+                    data_io = StringIO(valid_csv)
                     df = pd.read_csv(data_io)
                     
                     # Save the cleaned DataFrame
