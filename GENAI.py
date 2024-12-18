@@ -55,6 +55,8 @@ if api_key:
                     df.to_csv(csv_file_path, index=False)
                     st.success(f"CSV file saved as {csv_file_path}")
                     st.write(df)
+                    with open(csv_file_path, "rb") as f:
+                        st.download_button("Download CSV", f, file_name=csv_file_path)
 
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
