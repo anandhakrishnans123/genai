@@ -77,25 +77,27 @@ if api_key:
                     response = model.generate_content([prompt, full_text])
 
                     # Debugging: Inspect raw response
+                    # Debugging: Inspect raw response
                     csv_result = response.text
                     st.write("Raw Response from API:")
                     st.write(csv_result)
-
+                    
                     # Clean and parse CSV
-                    if csv_result.startswith("csv"):
-                        csv_result = "\n".join(csv_result.split("\n")[1:])  # Remove the first line if it starts with "csv"
+                    csv_result = csv_result.strip()  # Remove leading/trailing whitespace
+                    if csv_result.lower().startswith("csv"):
+                        csv_result = csv_result[csv_result.index("\n") + 1:]  # Remove the first line starting with "csv"
                     
                     data_io = StringIO(csv_result)
                     df = pd.read_csv(data_io)
-
+                    
                     # Save the cleaned DataFrame
                     csv_file_path = 'csv_output.csv'
                     df.to_csv(csv_file_path, index=False)
-
+                    
                     st.success(f"CSV file saved as {csv_file_path}")
                     st.write("Generated DataFrame:")
                     st.write(df)
-
+                    
                     # Download button for CSV
                     st.download_button(
                         label="Download CSV",
@@ -103,6 +105,7 @@ if api_key:
                         file_name="downloaded_data.csv",
                         mime="text/csv"
                     )
+
 
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
