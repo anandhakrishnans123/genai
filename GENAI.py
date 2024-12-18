@@ -127,7 +127,7 @@ if api_key:
                     df2['Start Date'] = df['date of billing']
                     df2['Facility'] = df['name and address of the bill receiver']
                     df2['City'] = df['circle name']
-                    df2['Res_Date] = datetime.now().strftime('%Y-%m-%d')
+                    df2['Res_Date'] = datetime.now().strftime('%Y-%m-%d')
                     st.write(df2)
                     st.download_button(
                         label="Download CSV",
