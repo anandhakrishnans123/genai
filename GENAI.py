@@ -67,7 +67,7 @@ if api_key:
             if st.button("Generate Content from PDF"):
                 try:
                     # Create a prompt for the model
-                    prompt = "Extract the value of net payable amount, title of the image, name and address of the bill receiver, date of billing, due date, and circle name from the image.If there is confusion with some values return null"
+                    prompt = "Extract the value of net payable amount, title of the image, name and address of the bill receiver, date of billing, due date, and circle name from the image.If there is confusion with some values return null.give response as csv"
                     response = model.generate_content([prompt, full_text])  # Assuming this format works with your API
                     
                     # Print the response from the API
