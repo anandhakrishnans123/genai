@@ -1,10 +1,8 @@
 import streamlit as st
 import google.generativeai as genai
-import pandas as pd
-from io import StringIO  # Import StringIO
 from PIL import Image
 
-st.title("Image to CSV Converter")
+st.title("Image to Text Extractor")
 
 # Input for API key
 api_key = "AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"
@@ -33,30 +31,15 @@ if api_key:
         rotated_img = img.rotate(st.session_state.rotation_angle, expand=True)
         st.image(rotated_img, caption='Uploaded Image (Rotated)', use_column_width=True)
 
-        # Generate CSV from image
-        if st.button("Convert Image to CSV"):
+        # Generate text from the image
+        if st.button("Extract Text from Image"):
             try:
                 # Create a prompt for the model
-                prompt = "Extract the value of net payable amount, title of the image,name and address of the bill reciver,date of billing,due date and circle name from the image"
+                prompt = "Extract the value of net payable amount, title of the image, name and address of the bill receiver, date of billing, due date, and circle name from the image"
                 response = model.generate_content([prompt, rotated_img])  # Assuming this format works with your API
-                csv_result = response.text
-
-                # Use StringIO to simulate a file-like object for pandas
-                data_io = StringIO(csv_result)
-
-                # Read the data into a DataFrame
-                df = pd.read_csv(data_io)
-
-                # Save the DataFrame to a CSV file
-                csv_file_path = 'csv_output.csv'
-                df.to_csv(csv_file_path, index=False)
-
-                st.success(f"CSV file saved as {csv_file_path}")
-                st.write(df)  # Display the DataFrame
-
-                # Provide a download link
-                with open(csv_file_path, "rb") as f:
-                    st.download_button("Download CSV", f, file_name=csv_file_path)
+                
+                # Print the response from the API
+                st.write(response.text)
 
             except Exception as e:
                 st.error(f"An error occurred: {e}")
