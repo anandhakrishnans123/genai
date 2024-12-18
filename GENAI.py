@@ -67,15 +67,7 @@ if api_key:
             if st.button("Generate Content from PDF"):
                 try:
                     # Create a prompt for the model
-                    prompt = """Extract the following details from the document and return them in a clean CSV format with headers: 
-1. Net payable amount 
-2. Title of the image 
-3. Name and address of the bill receiver 
-4. Date of billing 
-5. Due date 
-6. Circle name
-
-Ensure that each piece of information appears in its own column with no extra spaces or delimiters. If any data is missing or unclear, return 'null' in the respective field. Format the response strictly as CSV with comma delimiters and include a header row."""
+                    prompt="Extract the following details from the document and return them in a clean CSV format: net payable amount, title, name and address of the bill receiver, date of billing, due date, and circle name. Ensure each field is in a separate column with appropriate headers, and return 'null' for any missing or unclear data. The CSV should be formatted correctly with commas as delimiters and no extra spaces or errors."
 
                     response = model.generate_content([prompt, full_text])  # Assuming this format works with your API
                     csv_result = response.text
