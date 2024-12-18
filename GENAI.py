@@ -120,9 +120,14 @@ if api_key:
 ]
 
 # Create an empty DataFrame with the specified columns
-                    df1 = pd.DataFrame(columns=columns)
+                    df2 = pd.DataFrame(columns=columns)
                     # Download button for CSV
-                    st.write(df1)
+                    df2['Cost'] = df['net payable amount']
+                    df2['End Date'] = df['due date']
+                    df2['Start Date'] = df['date of billing']
+                    df2['Facility'] = df['name and address of the bill receiver']
+                    df2['City'] = df['circle name']
+                    st.write(df2)
                     st.download_button(
                         label="Download CSV",
                         data=df.to_csv(index=False),
