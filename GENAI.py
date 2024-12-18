@@ -4,6 +4,7 @@ from PIL import Image
 import fitz  # PyMuPDF for PDF handling
 import io  # To handle in-memory file stream
 from io import StringIO
+import pandas as pd
 
 st.title("PDF or Image to Text Extractor")
 
