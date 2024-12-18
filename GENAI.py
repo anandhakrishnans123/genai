@@ -73,7 +73,7 @@ if api_key:
                     data_io = StringIO(csv_result)
                     csv_file_path = 'csv_output.csv'
                     df = pd.read_csv(data_io)
-                    df = df.set_index(df.columns[0])
+                    df = df.set_index(df.columns[1])
                     # Save the DataFrame to a CSV file
                     csv_file_path = 'csv_output.csv'
                     df.to_csv(csv_file_path, index=False)
