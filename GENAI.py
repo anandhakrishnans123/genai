@@ -127,7 +127,7 @@ if api_key:
                     df2['Gas'] = "CO2"
                     df2['Country'] = "India"
                     df2['Energy Type'] = "India"
-                    df2["Energy Consumption"] = 2000
+                    df2["Energy Consumption"] = df["Total energy consumed in KWH"]
                     df2['End Date'] = pd.to_datetime(df2['End Date'], dayfirst=True)
                     df2['Start Date'] = pd.to_datetime(df2['Start Date'], dayfirst=True)
                     df2['Res_Date'] = pd.to_datetime(df2['Res_Date'], dayfirst=True)
