@@ -63,9 +63,6 @@ if api_key:
                 page = doc.load_page(page_num)
                 full_text += page.get_text()
 
-            st.write("Extracted Text from PDF:")
-            st.text_area("PDF Content", full_text, height=300)
-
             # Generate content from the PDF text
             if st.button("Generate Content from PDF"):
                 try:
