@@ -128,6 +128,12 @@ if api_key:
                     df2['Facility'] = df['name and address of the bill receiver']
                     df2['City'] = df['circle name']
                     df2['Res_Date'] = datetime.now().strftime('%Y-%m-%d')
+                    df2[Energy Unit]="KWh"
+                    df2['CF Standard']="IMO"
+                    df2['Gas']="CO2"
+                    df2['Country']="India"
+                    df2['Energy Type']="India"
+                    df2["Energy Consumption"]=2000
                     # st.write(df2)
                     st.download_button(
                         label="Download CSV",
