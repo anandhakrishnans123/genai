@@ -3,6 +3,7 @@ import google.generativeai as genai
 from PIL import Image
 import fitz  # PyMuPDF for PDF handling
 import io  # To handle in-memory file stream
+from io import StringIO
 
 st.title("PDF or Image to Text Extractor")
 
