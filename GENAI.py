@@ -84,9 +84,9 @@ if api_key:
                     
                     # Clean and parse CSV
                     # Debugging: Inspect raw response
-                    csv_result = response.text
-                    st.write("Raw Response from API:")
-                    st.write(csv_result)
+                    # csv_result = response.text
+                    # st.write("Raw Response from API:")
+                    # st.write(csv_result)
                     
                     # Clean and parse CSV
                     # Strip leading/trailing whitespace
