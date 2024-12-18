@@ -55,7 +55,7 @@ if api_key:
         elif file_type == "application/pdf":
             # Handle PDF files
             pdf_data = uploaded_file.read()  # Read the uploaded file as bytes
-            doc = fitz.open(io.BytesIO(pdf_data))  # Open the PDF from the in-memory byte stream
+            doc = fitz.open("pdf", pdf_data)  # Open the PDF using the correct format for bytes
             full_text = ""
             
             # Extract text from each page
