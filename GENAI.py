@@ -113,8 +113,16 @@ if api_key:
                     st.success(f"CSV file saved as {csv_file_path}")
                     st.write("Generated DataFrame:")
                     st.write(df)
-                    
+                    columns = [
+    'Res_Date', 'Department', 'Facility', 'Start Date', 'End Date', 
+    'Country', 'City', 'Activity', 'Activity Unit', 'Energy Type', 
+    'Energy Unit', 'Energy Consumption', 'Cost', 'Price p/u', 'CF Standard', 'Gas'
+]
+
+# Create an empty DataFrame with the specified columns
+                    df1 = pd.DataFrame(columns=columns)
                     # Download button for CSV
+                    st.write(df1)
                     st.download_button(
                         label="Download CSV",
                         data=df.to_csv(index=False),
