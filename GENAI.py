@@ -144,6 +144,9 @@ if api_key:
                         file_name="downloaded_data.xlsx",
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
+                    if st.button('Upload to system'):
+    # Create a link using markdown
+                        st.markdown("https://samesg.samcorporate.com/app/oecs1clayjeh02r4azwfozndif0/page/default/data-upload/etl/emission-calculations/66545e850b4e5b2af3c80e81/list/create")
 
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
