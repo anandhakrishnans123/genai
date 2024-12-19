@@ -9,7 +9,11 @@ from datetime import datetime
 
 # Set up the Streamlit app title
 st.title("PDF or Image to Text Extractor")
-
+st.markdown(
+    '<a href="https://samesg.samcorporate.com/app/oecs1clayjeh02r4azwfozndif0/page/default/data-upload/etl/emission-calculations/66545e850b4e5b2af3c80e81/list/create" target="_blank">'
+    '<button>Upload to system</button></a>', 
+    unsafe_allow_html=True
+)
 # Input for API key
 api_key = "AIzaSyBA3sUF2AFbcYwrsuY7zVu38dB-pOA-v9c"  # Replace with your API key
 
@@ -147,11 +151,7 @@ if api_key:
                     
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
-                st.markdown(
-    '<a href="https://samesg.samcorporate.com/app/oecs1clayjeh02r4azwfozndif0/page/default/data-upload/etl/emission-calculations/66545e850b4e5b2af3c80e81/list/create" target="_blank">'
-    '<button>Click to visit the Emission Calculations page</button></a>', 
-    unsafe_allow_html=True
-)
+                
 
 else:
     st.warning("Please enter your API key to proceed.")
