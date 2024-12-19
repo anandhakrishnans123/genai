@@ -144,13 +144,14 @@ if api_key:
                         file_name="downloaded_data.xlsx",
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
-                    st.markdown(
+                    
+                except Exception as e:
+                    st.error(f"An error occurred: {e}")
+                st.markdown(
     '<a href="https://samesg.samcorporate.com/app/oecs1clayjeh02r4azwfozndif0/page/default/data-upload/etl/emission-calculations/66545e850b4e5b2af3c80e81/list/create" target="_blank">'
     '<button>Click to visit the Emission Calculations page</button></a>', 
     unsafe_allow_html=True
 )
-                except Exception as e:
-                    st.error(f"An error occurred: {e}")
 
 else:
     st.warning("Please enter your API key to proceed.")
